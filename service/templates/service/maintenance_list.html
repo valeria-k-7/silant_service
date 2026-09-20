@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Техническое обслуживание — Мой Силант
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-heading">
+        <img
+            class="page-heading__icon"
+            src="{% static 'core/icons/maintenance.svg' %}"
+            alt=""
+            aria-hidden="true"
+        >
+        <span>Техническое обслуживание</span>
+    </h1>
+
+    {% if can_add_maintenance %}
+        <p>
+            <a href="{% url 'service:create' %}">Добавить ТО</a>
+        </p>
+    {% endif %}
+
+    <form method="get" class="list-filters">
+        {{ filterset.form.as_p }}
+
+        <div class="list-filters__actions">
+            <button type="submit">Применить</button>
+            <a href="{% url 'service:list' %}">Сбросить</a>
+        </div>
+    </form>
+
+    <p>Найдено записей ТО: {{ maintenance_records|length }}</p>
+
+    <div class="table-wrapper">
+        <table class="data-table wide-table">
+        <thead>
+            <tr>
+                <th>Вид ТО</th>
+                <th>Дата проведения ТО</th>
+                <th>Наработка, м/час</th>
+                <th>№ заказ-наряда</th>
+                <th>Дата заказ-наряда</th>
+                <th>Организация, проводившая ТО</th>
+                <th>Зав. № машины</th>
+                <th>Сервисная компания</th>
+
+                {% if can_change_maintenance %}
+                    <th>Действия</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for record in maintenance_records %}
+                <tr data-clickable-row>
+                    <td>{{ record.maintenance_type }}</td>
+                    <td>{{ record.maintenance_date|date:"d.m.Y" }}</td>
+                    <td>{{ record.operating_time }}</td>
+                    <td>{{ record.work_order_number }}</td>
+                    <td>{{ record.work_order_date|date:"d.m.Y" }}</td>
+                    <td>{{ record.organization }}</td>
+                    <td>
+                        <a href="{% url 'service:detail' record.pk %}" data-row-detail-link>
+                            {{ record.machine.factory_number }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ record.service_company.get_full_name|default:record.service_company.username }}
+                    </td>
+
+                    {% if can_change_maintenance %}
+                        <td>
+                            <a href="{% url 'service:update' record.pk %}">
+                                Редактировать
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="{% if can_change_maintenance %}9{% else %}8{% endif %}">
+                        Записи ТО не найдены.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

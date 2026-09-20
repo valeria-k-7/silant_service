@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Машина {{ machine.factory_number }} — Мой Силант
+{% endblock %}
+
+{% block content %}
+    <h1>Машина {{ machine.factory_number }}</h1>
+
+    <table class="detail-table">
+        <tbody>
+            <tr>
+                <th>Зав. № машины</th>
+                <td>{{ machine.factory_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Модель техники</th>
+                <td>
+                    {{ machine.technique_model }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ machine.technique_model.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Модель двигателя</th>
+                <td>
+                    {{ machine.engine_model }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ machine.engine_model.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Зав. № двигателя</th>
+                <td>{{ machine.engine_factory_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Модель трансмиссии</th>
+                <td>
+                    {{ machine.transmission_model }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ machine.transmission_model.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Зав. № трансмиссии</th>
+                <td>{{ machine.transmission_factory_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Модель ведущего моста</th>
+                <td>
+                    {{ machine.drive_axle_model }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ machine.drive_axle_model.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Зав. № ведущего моста</th>
+                <td>{{ machine.drive_axle_factory_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Модель управляемого моста</th>
+                <td>
+                    {{ machine.steering_axle_model }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ machine.steering_axle_model.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Зав. № управляемого моста</th>
+                <td>{{ machine.steering_axle_factory_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Договор поставки №, дата</th>
+                <td>{{ machine.supply_contract|default:"—" }}</td>
+            </tr>
+
+            <tr>
+                <th>Дата отгрузки с завода</th>
+                <td>{{ machine.shipment_date|date:"d.m.Y" }}</td>
+            </tr>
+
+            <tr>
+                <th>Грузополучатель (конечный потребитель)</th>
+                <td>{{ machine.consignee }}</td>
+            </tr>
+
+            <tr>
+                <th>Адрес поставки (эксплуатации)</th>
+                <td>{{ machine.delivery_address }}</td>
+            </tr>
+
+            <tr>
+                <th>Комплектация (доп. опции)</th>
+                <td>{{ machine.equipment|default:"—" }}</td>
+            </tr>
+
+            <tr>
+                <th>Клиент</th>
+                <td>{{ machine.client.get_full_name|default:machine.client.username }}</td>
+            </tr>
+
+            <tr>
+                <th>Сервисная компания</th>
+                <td>{{ machine.service_company.get_full_name|default:machine.service_company.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="detail-actions">
+        <a
+            class="button button--secondary"
+            href="{% url 'machines:list' %}"
+        >
+            К общей информации
+        </a>
+
+        {% if perms.machines.change_machine %}
+            <a
+                class="button button--primary"
+                href="{% url 'machines:update' machine.pk %}"
+            >
+                Редактировать машину
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Рекламации — Мой Силант
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-heading">
+        <img
+            class="page-heading__icon"
+            src="{% static 'core/icons/complaints.svg' %}"
+            alt=""
+            aria-hidden="true"
+        >
+        <span>Рекламации</span>
+    </h1>
+
+    {% if can_add_complaint %}
+        <p>
+            <a href="{% url 'complaints:create' %}">
+                Добавить рекламацию
+            </a>
+        </p>
+    {% endif %}
+
+    <form method="get" class="list-filters">
+        {{ filterset.form.as_p }}
+
+        <div class="list-filters__actions">
+            <button type="submit">Применить</button>
+            <a href="{% url 'complaints:list' %}">Сбросить</a>
+        </div>
+    </form>
+
+    <p>Найдено рекламаций: {{ complaints|length }}</p>
+
+    <div class="table-wrapper">
+        <table class="data-table wide-table">
+        <thead>
+            <tr>
+                <th>Дата отказа</th>
+                <th>Наработка, м/час</th>
+                <th>Узел отказа</th>
+                <th>Описание отказа</th>
+                <th>Способ восстановления</th>
+                <th>Используемые запасные части</th>
+                <th>Дата восстановления</th>
+                <th>Время простоя техники</th>
+                <th>Зав. № машины</th>
+                <th>Сервисная компания</th>
+
+                {% if editable_complaint_ids %}
+                    <th>Действия</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for complaint in complaints %}
+                <tr data-clickable-row>
+                    <td>{{ complaint.failure_date|date:"d.m.Y" }}</td>
+                    <td>{{ complaint.operating_time }}</td>
+                    <td>{{ complaint.failure_node }}</td>
+                    <td>{{ complaint.failure_description }}</td>
+                    <td>{{ complaint.recovery_method }}</td>
+                    <td>{{ complaint.spare_parts|default:"—" }}</td>
+                    <td>{{ complaint.recovery_date|date:"d.m.Y" }}</td>
+                    <td>{{ complaint.downtime }}</td>
+                    <td>
+                        <a href="{% url 'complaints:detail' complaint.pk %}" data-row-detail-link>
+                            {{ complaint.machine.factory_number }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ complaint.service_company.get_full_name|default:complaint.service_company.username }}
+                    </td>
+
+                    {% if editable_complaint_ids %}
+                        <td>
+                            {% if complaint.pk in editable_complaint_ids %}
+                                <a href="{% url 'complaints:update' complaint.pk %}">
+                                    Редактировать
+                                </a>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="{% if editable_complaint_ids %}11{% else %}10{% endif %}">
+                        Рекламации не найдены.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

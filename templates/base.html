@@ -1,0 +1,174 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}Мой Силант{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'core/css/styles.css' %}"
+    >
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <div class="container site-header__top">
+
+            <a
+                class="site-header__logo"
+                href="{% url 'core:home' %}"
+                aria-label="Мой Силант — главная"
+            >
+                <img
+                    src="{% static 'core/images/silant-logo.svg' %}"
+                    alt="Мой Силант"
+                >
+            </a>
+
+            <div class="site-header__contact">
+                +7-8352-20-12-09 , telegram
+            </div>
+
+            <div class="account-nav">
+
+                {% if user.is_authenticated %}
+
+                    <span class="account-name">
+                        {{ user.get_full_name|default:user.username }}
+                    </span>
+
+                    <form
+                        method="post"
+                        action="{% url 'account_logout' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            class="button button--secondary"
+                            type="submit"
+                        >
+                            Выйти
+                        </button>
+                    </form>
+
+                {% else %}
+
+                    <a
+                        class="button button--primary"
+                        href="{% url 'account_login' %}"
+                    >
+                        Авторизация
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="site-header__title">
+            <div class="container">
+                Электронная сервисная книжка «Мой Силант»
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+
+            <nav
+                class="site-nav"
+                aria-label="Основные разделы сервиса"
+            >
+                <div class="container site-nav__inner">
+
+                    <div class="site-nav__primary">
+
+                        <a
+                            class="site-nav__link{% if request.resolver_match.namespace == 'machines' and request.resolver_match.url_name == 'list' or request.resolver_match.namespace == 'machines' and request.resolver_match.url_name == 'detail' or request.resolver_match.namespace == 'machines' and request.resolver_match.url_name == 'create' or request.resolver_match.namespace == 'machines' and request.resolver_match.url_name == 'update' %} site-nav__link--active{% endif %}"
+                            href="{% url 'machines:list' %}"
+                        >
+                            Общая информация
+                        </a>
+
+                        <a
+                            class="site-nav__link{% if request.resolver_match.namespace == 'service' and request.resolver_match.url_name == 'list' or request.resolver_match.namespace == 'service' and request.resolver_match.url_name == 'detail' or request.resolver_match.namespace == 'service' and request.resolver_match.url_name == 'create' or request.resolver_match.namespace == 'service' and request.resolver_match.url_name == 'update' %} site-nav__link--active{% endif %}"
+                            href="{% url 'service:list' %}"
+                        >
+                            ТО
+                        </a>
+
+                        <a
+                            class="site-nav__link{% if request.resolver_match.namespace == 'complaints' and request.resolver_match.url_name == 'list' or request.resolver_match.namespace == 'complaints' and request.resolver_match.url_name == 'detail' or request.resolver_match.namespace == 'complaints' and request.resolver_match.url_name == 'create' or request.resolver_match.namespace == 'complaints' and request.resolver_match.url_name == 'update' %} site-nav__link--active{% endif %}"
+                            href="{% url 'complaints:list' %}"
+                        >
+                            Рекламации
+                        </a>
+
+                    </div>
+
+                    {% if perms.machines.view_techniquemodel %}
+
+                        <a
+                            class="site-nav__link site-nav__tool{% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'references' or 'technique_model_' in request.resolver_match.url_name or 'engine_model_' in request.resolver_match.url_name or 'transmission_model_' in request.resolver_match.url_name or 'drive_axle_model_' in request.resolver_match.url_name or 'steering_axle_model_' in request.resolver_match.url_name or 'maintenance_type_' in request.resolver_match.url_name or 'maintenance_organization_' in request.resolver_match.url_name or 'failure_node_' in request.resolver_match.url_name or 'recovery_method_' in request.resolver_match.url_name %} site-nav__link--active{% endif %}"
+                            href="{% url 'core:references' %}"
+                        >
+                            Справочники
+                        </a>
+
+                    {% endif %}
+
+                </div>
+            </nav>
+
+        {% endif %}
+
+    </header>
+
+
+    <main class="site-main">
+        <div class="container">
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+
+        </div>
+    </main>
+
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+
+            <div class="site-footer__contact">
+                +7-8352-20-12-09 , telegram
+            </div>
+
+            <div class="site-footer__copyright">
+                Мой Силант 2022
+            </div>
+
+        </div>
+    </footer>
+
+
+    <script src="{% static 'core/js/clickable_rows.js' %}"></script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

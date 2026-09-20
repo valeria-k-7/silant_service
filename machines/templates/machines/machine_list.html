@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Общая информация — Мой Силант{% endblock %}
+
+{% block content %}
+    <h1 class="page-heading">
+        <img
+            class="page-heading__icon"
+            src="{% static 'core/icons/machines.svg' %}"
+            alt=""
+            aria-hidden="true"
+        >
+        <span>Комплектация и технические характеристики</span>
+    </h1>
+
+    {% if can_add_machine %}
+        <p>
+            <a href="{% url 'machines:create' %}">Добавить машину</a>
+        </p>
+    {% endif %}
+
+    <form class="machine-filters" method="get">
+        <label>
+            Модель техники:
+            <select name="technique_model">
+                <option value="">Все</option>
+                {% for model in technique_models %}
+                    <option value="{{ model.id }}"
+                        {% if selected.technique_model == model.id|stringformat:"s" %}selected{% endif %}>
+                        {{ model }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Модель двигателя:
+            <select name="engine_model">
+                <option value="">Все</option>
+                {% for model in engine_models %}
+                    <option value="{{ model.id }}"
+                        {% if selected.engine_model == model.id|stringformat:"s" %}selected{% endif %}>
+                        {{ model }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Модель трансмиссии:
+            <select name="transmission_model">
+                <option value="">Все</option>
+                {% for model in transmission_models %}
+                    <option value="{{ model.id }}"
+                        {% if selected.transmission_model == model.id|stringformat:"s" %}selected{% endif %}>
+                        {{ model }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Модель ведущего моста:
+            <select name="drive_axle_model">
+                <option value="">Все</option>
+                {% for model in drive_axle_models %}
+                    <option value="{{ model.id }}"
+                        {% if selected.drive_axle_model == model.id|stringformat:"s" %}selected{% endif %}>
+                        {{ model }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Модель управляемого моста:
+            <select name="steering_axle_model">
+                <option value="">Все</option>
+                {% for model in steering_axle_models %}
+                    <option value="{{ model.id }}"
+                        {% if selected.steering_axle_model == model.id|stringformat:"s" %}selected{% endif %}>
+                        {{ model }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <div class="machine-filters__actions">
+            <button type="submit">Применить</button>
+            <a href="{% url 'machines:list' %}">Сбросить</a>
+        </div>
+    </form>
+
+    <p>Найдено машин: {{ machines|length }}</p>
+
+    <div class="table-wrapper">
+        <table class="data-table machine-table">
+            <thead>
+                <tr>
+                    <th>Зав. № машины</th>
+                    <th>Модель техники</th>
+                    <th>Модель двигателя</th>
+                    <th>Зав. № двигателя</th>
+                    <th>Модель трансмиссии</th>
+                    <th>Зав. № трансмиссии</th>
+                    <th>Модель ведущего моста</th>
+                    <th>Зав. № ведущего моста</th>
+                    <th>Модель управляемого моста</th>
+                    <th>Зав. № управляемого моста</th>
+                    <th>Договор поставки №, дата</th>
+                    <th>Дата отгрузки с завода</th>
+                    <th>Грузополучатель (конечный потребитель)</th>
+                    <th>Адрес поставки (эксплуатации)</th>
+                    <th>Комплектация (доп. опции)</th>
+                    <th>Клиент</th>
+                    <th>Сервисная компания</th>
+
+                    {% if can_change_machine %}
+                        <th>Действия</th>
+                    {% endif %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for machine in machines %}
+                    <tr data-clickable-row>
+                        <td>
+                            <a
+                                href="{% url 'machines:detail' machine.pk %}"
+                                data-row-detail-link
+                            >
+                                {{ machine.factory_number }}
+                            </a>
+                        </td>
+
+                        <td>{{ machine.technique_model }}</td>
+                        <td>{{ machine.engine_model }}</td>
+                        <td>{{ machine.engine_factory_number }}</td>
+                        <td>{{ machine.transmission_model }}</td>
+                        <td>{{ machine.transmission_factory_number }}</td>
+                        <td>{{ machine.drive_axle_model }}</td>
+                        <td>{{ machine.drive_axle_factory_number }}</td>
+                        <td>{{ machine.steering_axle_model }}</td>
+                        <td>{{ machine.steering_axle_factory_number }}</td>
+                        <td>{{ machine.supply_contract|default:"—" }}</td>
+                        <td>{{ machine.shipment_date|date:"d.m.Y" }}</td>
+                        <td>{{ machine.consignee }}</td>
+                        <td>{{ machine.delivery_address }}</td>
+                        <td>{{ machine.equipment|default:"—" }}</td>
+                        <td>{{ machine.client.get_full_name|default:machine.client.username }}</td>
+                        <td>{{ machine.service_company.get_full_name|default:machine.service_company.username }}</td>
+
+                        {% if can_change_machine %}
+                            <td>
+                                <a href="{% url 'machines:update' machine.pk %}">
+                                    Редактировать
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="{% if can_change_machine %}18{% else %}17{% endif %}">
+                            Машины не найдены.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

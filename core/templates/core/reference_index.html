@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Справочники — Мой Силант{% endblock %}
+
+{% block content %}
+    <h1 class="page-heading">
+        <img
+            class="page-heading__icon page-heading__icon--references"
+            src="{% static 'core/icons/references.svg' %}"
+            alt=""
+            aria-hidden="true"
+        >
+        <span>Справочники</span>
+    </h1>
+
+    <p class="page-intro">
+        Управление справочными данными сервиса «Мой Силант».
+    </p>
+
+    <div class="reference-sections">
+
+        <section class="reference-group">
+            <h2>Машины</h2>
+
+            <div class="reference-grid">
+                <a class="reference-card" href="{% url 'machines:technique_model_list' %}">
+                    Модели техники
+                </a>
+
+                <a class="reference-card" href="{% url 'machines:engine_model_list' %}">
+                    Модели двигателя
+                </a>
+
+                <a class="reference-card" href="{% url 'machines:transmission_model_list' %}">
+                    Модели трансмиссии
+                </a>
+
+                <a class="reference-card" href="{% url 'machines:drive_axle_model_list' %}">
+                    Модели ведущего моста
+                </a>
+
+                <a class="reference-card" href="{% url 'machines:steering_axle_model_list' %}">
+                    Модели управляемого моста
+                </a>
+            </div>
+        </section>
+
+        <section class="reference-group">
+            <h2>Техническое обслуживание</h2>
+
+            <div class="reference-grid">
+                <a class="reference-card" href="{% url 'service:maintenance_type_list' %}">
+                    Виды ТО
+                </a>
+
+                <a class="reference-card" href="{% url 'service:maintenance_organization_list' %}">
+                    Организации, проводившие ТО
+                </a>
+            </div>
+        </section>
+
+        <section class="reference-group">
+            <h2>Рекламации</h2>
+
+            <div class="reference-grid">
+                <a class="reference-card" href="{% url 'complaints:failure_node_list' %}">
+                    Узлы отказа
+                </a>
+
+                <a class="reference-card" href="{% url 'complaints:recovery_method_list' %}">
+                    Способы восстановления
+                </a>
+            </div>
+        </section>
+
+    </div>
+{% endblock %}

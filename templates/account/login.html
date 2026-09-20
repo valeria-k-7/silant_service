@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход — Мой Силант{% endblock %}
+
+{% block content %}
+    <section class="auth-page">
+        <div class="auth-card">
+            <h1>Вход в систему</h1>
+
+            <p class="auth-card__intro">
+                Введите имя пользователя и пароль,
+                выданные администратором.
+            </p>
+
+            <form
+                class="auth-form"
+                method="post"
+                action="{% url 'account_login' %}"
+            >
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                <p>
+                    <label for="{{ form.login.id_for_label }}">
+                        Имя пользователя:
+                    </label>
+                    {{ form.login }}
+                    {{ form.login.errors }}
+                </p>
+
+                <p>
+                    <label for="{{ form.password.id_for_label }}">
+                        Пароль:
+                    </label>
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                </p>
+
+                {% if form.remember %}
+                    <p>
+                        <label for="{{ form.remember.id_for_label }}">
+                            {{ form.remember }}
+                            Запомнить меня
+                        </label>
+                        {{ form.remember.errors }}
+                    </p>
+                {% endif %}
+
+                {% if redirect_field_value %}
+                    <input
+                        type="hidden"
+                        name="{{ redirect_field_name }}"
+                        value="{{ redirect_field_value }}"
+                    >
+                {% endif %}
+
+                <div class="auth-actions">
+                    <button
+                        class="button button--primary"
+                        type="submit"
+                    >
+                        Войти
+                    </button>
+
+                    <a
+                        class="button button--secondary"
+                        href="{% url 'core:home' %}"
+                    >
+                        На главную
+                    </a>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

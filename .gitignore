@@ -1,0 +1,24 @@
+# Virtual environment
+.venv/
+
+# IDE
+.idea/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test / analysis cache
+.pytest_cache/
+
+# Temporary files
+audit_tests.txt
+*.log
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Private demo credentials
+DEMO_CREDENTIALS.txt

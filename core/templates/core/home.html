@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой Силант{% endblock %}
+
+{% block content %}
+
+        <section class="machine-search">
+
+            <h1 class="machine-search__title">
+                Проверьте комплектацию и технические характеристики техники Силант
+            </h1>
+
+            <form class="machine-search__form" method="get">
+
+                <label
+                    class="machine-search__label"
+                    for="factory_number"
+                >
+                    Заводской номер:
+                </label>
+
+                <input
+                    class="machine-search__input"
+                    type="text"
+                    id="factory_number"
+                    name="factory_number"
+                    value="{{ factory_number }}"
+                    required
+                >
+
+                <button
+                    class="machine-search__button"
+                    type="submit"
+                >
+                    Поиск
+                </button>
+
+            </form>
+
+            {% if search_performed %}
+
+                <section class="search-result">
+
+                    <h2 class="search-result__title">
+                        Результат поиска:
+                    </h2>
+
+                    {% if machine %}
+
+                        <p class="search-result__description">
+                            Информация о комплектации и технических характеристиках
+                            вашей техники
+                        </p>
+
+                        <div class="table-wrapper">
+
+                            <table class="data-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Зав. № машины</th>
+                                        <th>Модель техники</th>
+                                        <th>Модель двигателя</th>
+                                        <th>Зав. № двигателя</th>
+                                        <th>Модель трансмиссии</th>
+                                        <th>Зав. № трансмиссии</th>
+                                        <th>Модель ведущего моста</th>
+                                        <th>Зав. № ведущего моста</th>
+                                        <th>Модель управляемого моста</th>
+                                        <th>Зав. № управляемого моста</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>{{ machine.factory_number }}</td>
+                                        <td>{{ machine.technique_model }}</td>
+                                        <td>{{ machine.engine_model }}</td>
+                                        <td>{{ machine.engine_factory_number }}</td>
+                                        <td>{{ machine.transmission_model }}</td>
+                                        <td>{{ machine.transmission_factory_number }}</td>
+                                        <td>{{ machine.drive_axle_model }}</td>
+                                        <td>{{ machine.drive_axle_factory_number }}</td>
+                                        <td>{{ machine.steering_axle_model }}</td>
+                                        <td>{{ machine.steering_axle_factory_number }}</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="search-result__empty">
+                            Данных о машине с таким заводским номером нет в системе.
+                        </p>
+
+                    {% endif %}
+
+                </section>
+
+            {% endif %}
+
+        </section>
+
+{% endblock %}

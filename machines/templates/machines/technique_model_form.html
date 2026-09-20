@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}
+        Редактирование модели техники — Мой Силант
+    {% else %}
+        Добавление модели техники — Мой Силант
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if object %}
+            Редактирование модели техники
+        {% else %}
+            Добавление модели техники
+        {% endif %}
+    </h1>
+
+    <form class="entity-form" method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div class="form-actions">
+            <button
+                class="button button--primary"
+                type="submit"
+            >
+                Сохранить
+            </button>
+
+            <a
+                class="button button--secondary"
+                href="{% url 'machines:technique_model_list' %}"
+            >
+                Отмена
+            </a>
+        </div>
+    </form>
+{% endblock %}

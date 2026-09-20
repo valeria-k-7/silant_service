@@ -1,0 +1,1 @@
+Успешный вход: {{ user.get_full_name|default:user.username }}.

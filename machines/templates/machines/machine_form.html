@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}
+        Редактирование машины — Мой Силант
+    {% else %}
+        Добавление машины — Мой Силант
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if object %}
+            Редактирование машины
+        {% else %}
+            Добавление машины
+        {% endif %}
+    </h1>
+
+    <form class="entity-form" method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div class="form-actions">
+            <button
+                class="button button--primary"
+                type="submit"
+            >
+                Сохранить
+            </button>
+
+            {% if object %}
+                <a
+                    class="button button--secondary"
+                    href="{% url 'machines:detail' object.pk %}"
+                >
+                    Отмена
+                </a>
+            {% else %}
+                <a
+                    class="button button--secondary"
+                    href="{% url 'machines:list' %}"
+                >
+                    Отмена
+                </a>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}

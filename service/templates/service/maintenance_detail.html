@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    ТО машины {{ maintenance.machine.factory_number }} — Мой Силант
+{% endblock %}
+
+{% block content %}
+    <h1>Техническое обслуживание</h1>
+
+    <table class="detail-table">
+        <tbody>
+            <tr>
+                <th>Вид ТО</th>
+                <td>
+                    {{ maintenance.maintenance_type }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ maintenance.maintenance_type.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Дата проведения ТО</th>
+                <td>{{ maintenance.maintenance_date|date:"d.m.Y" }}</td>
+            </tr>
+
+            <tr>
+                <th>Наработка, м/час</th>
+                <td>{{ maintenance.operating_time }}</td>
+            </tr>
+
+            <tr>
+                <th>№ заказ-наряда</th>
+                <td>{{ maintenance.work_order_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Дата заказ-наряда</th>
+                <td>{{ maintenance.work_order_date|date:"d.m.Y" }}</td>
+            </tr>
+
+            <tr>
+                <th>Организация, проводившая ТО</th>
+                <td>
+                    {{ maintenance.organization }}
+                    <br>
+                    <strong>Описание:</strong>
+                    {{ maintenance.organization.description|default:"—" }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Машина</th>
+                <td>{{ maintenance.machine.factory_number }}</td>
+            </tr>
+
+            <tr>
+                <th>Сервисная компания</th>
+                <td>{{ maintenance.service_company.get_full_name|default:maintenance.service_company.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="detail-actions">
+        <a
+            class="button button--secondary"
+            href="{% url 'service:list' %}"
+        >
+            К списку ТО
+        </a>
+
+        {% if perms.service.change_maintenance %}
+            <a
+                class="button button--primary"
+                href="{% url 'service:update' maintenance.pk %}"
+            >
+                Редактировать ТО
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
